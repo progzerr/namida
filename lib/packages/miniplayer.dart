@@ -50,6 +50,7 @@ import 'package:namida/ui/dialogs/edit_tags_dialog.dart';
 import 'package:namida/ui/dialogs/track_info_dialog.dart';
 import 'package:namida/ui/widgets/animated_widgets.dart';
 import 'package:namida/ui/widgets/artwork.dart';
+import 'package:namida/ui/widgets/vinyl_artwork.dart';
 import 'package:namida/ui/widgets/custom_widgets.dart';
 import 'package:namida/ui/widgets/effects/effects.dart';
 import 'package:namida/ui/widgets/floating_image.dart';
@@ -1435,7 +1436,7 @@ class _TrackImage extends StatelessWidget {
     final imagePath = isFront ? track.pathToImage : backCover.filePath;
     return _PlaybackGlowOpacity(
       builder: (glowOpacity) => LayoutWidthHeightProvider(
-        builder: (context, maxWidth, maxHeight) => ArtworkWidget(
+        builder: (context, maxWidth, maxHeight) => VinylDiscArtwork(
           key: artworkKey,
           track: isFront ? track : null,
           path: imagePath,
@@ -1443,24 +1444,10 @@ class _TrackImage extends StatelessWidget {
           extractInternally: isFront,
           fallbackToFolderCover: isFront,
           thumbnailSize: maxWidth,
-          width: maxWidth,
-          height: maxHeight,
+          size: math.min(maxWidth, maxHeight),
           compressed: MiniPlayerController.inst.shouldCompressArtwork,
-          borderRadius: 6.0 + 8.0.multipliedRadius * (maxWidth * 0.004),
           fadeMilliSeconds: 0,
-          forceSquared: settings.forceSquaredTrackThumbnail.value,
-          boxShadow: const [
-            BoxShadow(
-              color: Color.fromARGB(40, 12, 12, 12),
-              blurRadius: 18.0,
-              offset: Offset(0.0, 6.0),
-            ),
-          ],
-          iconSize: maxWidth * 0.5,
-          blur: 32.0 * MiniPlayerController.inst.animation.value,
           glowOpacity: glowOpacity,
-          disableBlurBgSizeShrink: true,
-          allowFloating: true,
         ),
       ),
     );

@@ -280,6 +280,19 @@ class _NamidaWaveBarsPainter extends CustomPainter {
       canvas.clipRect(Rect.fromLTWH(0, 0, playedWidth, size.height));
       final playedColors = this.playedColors;
       if (playedColors != null && playedColors.length >= 2) {
+        // -- a soft translucent wash under the played bars, the same tint
+        // -- as the disc's liquid — so the played portion reads as "filled"
+        // -- rather than just a differently-colored set of bars.
+        canvas.drawRect(
+          Rect.fromLTWH(0, 0, playedWidth, size.height),
+          Paint()
+            ..shader = ui.Gradient.linear(
+              Offset(0, 0),
+              Offset(0, size.height),
+              [playedColors.first.withOpacityExt(0.22), playedColors.first.withOpacityExt(0.07)],
+            ),
+        );
+
         // -- the paint color alpha modulates the shader, the gradient colors already carry the alpha.
         paint.color = const Color(0xFFFFFFFF);
         paint.shader = ui.Gradient.linear(Offset.zero, Offset(playedWidth, 0), playedColors);

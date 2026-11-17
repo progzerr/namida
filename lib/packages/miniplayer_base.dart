@@ -1384,14 +1384,42 @@ class _NamidaMiniPlayerBaseState<E, S> extends State<NamidaMiniPlayerBase<E, S>>
                                 alignment: Alignment.bottomCenter,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                                  child: SimpleLyricsLineWidget(
-                                    fitToWidth: true,
-                                    style: NText.medium
-                                        .of(context)
-                                        .copyWith(
-                                          fontSize: _kSimpleLyricsLineFontSize,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                  child: LayoutBuilder(
+                                    builder: (context, constraints) => Obx(
+                                      (context) {
+                                        // -- a faint ambient wash behind the current line, the same
+                                        // -- liquid color as the disc's own bloom, so the two surfaces
+                                        // -- read as part of one scene rather than two separate widgets.
+                                        final liquidColor = CurrentColor.inst.miniplayerColor;
+                                        return Stack(
+                                          alignment: Alignment.center,
+                                          clipBehavior: Clip.none,
+                                          children: [
+                                            IgnorePointer(
+                                              child: Container(
+                                                width: constraints.maxWidth,
+                                                height: _kSimpleLyricsLineFontSize * 3.2,
+                                                decoration: BoxDecoration(
+                                                  gradient: RadialGradient(
+                                                    colors: [liquidColor.withOpacityExt(0.16), Colors.transparent],
+                                                    stops: const [0.0, 1.0],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SimpleLyricsLineWidget(
+                                              fitToWidth: true,
+                                              style: NText.medium
+                                                  .of(context)
+                                                  .copyWith(
+                                                    fontSize: _kSimpleLyricsLineFontSize,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
                               ),

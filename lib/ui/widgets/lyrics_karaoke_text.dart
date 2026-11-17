@@ -761,7 +761,10 @@ class _KaraokeColors {
     final vivid = hsl.saturation < 0.08 ? hsl : hsl.withSaturation(math.max(hsl.saturation, _minSaturation));
     return _KaraokeColors._(
       base.withValues(alpha: baseAlpha * _dimAlpha),
-      effects.contains(LyricsEffect.accentTint) ? Color.lerp(base, vivid.withLightness(isDark ? 0.78 : 0.32).toColor().withValues(alpha: baseAlpha), _tintStrength)! : base,
+      // -- the sung/filled word always carries the liquid tint now, instead
+      // -- of only when the separate "accent tint" effect toggle is on —
+      // -- this is meant to match the vinyl's liquid color, not be optional.
+      Color.lerp(base, vivid.withLightness(isDark ? 0.78 : 0.32).toColor().withValues(alpha: baseAlpha), _tintStrength)!,
       effects.contains(LyricsEffect.glow) ? vivid.withLightness(isDark ? 0.6 : 0.5).toColor().withValues(alpha: baseAlpha * _glowAlpha * (isDark ? 1.0 : 0.6)) : null,
       Color.fromRGBO(255, 255, 255, baseAlpha * _shimmerAlpha),
     );
