@@ -17,10 +17,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout (with submodules)
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
+
+      # Only 3 of the repo's 4 submodules are needed for Android, and only
+      # those 3 are public. `external/ffmpeg_build` is private (or gone —
+      # GitHub returns the same "not found" either way for an anonymous
+      # clone) and is only referenced by linux/CMakeLists.txt,
+      # windows/CMakeLists.txt, and the desktop bundling scripts — nothing
+      # in android/. So it's deliberately skipped rather than attempted.
+      - name: Init required submodules only
+        run: git submodule update --init external/language external/namida-assets external/party_relay
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
